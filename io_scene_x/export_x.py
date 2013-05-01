@@ -531,8 +531,8 @@ class MeshExportObject(ExportObject):
                             tuple(len(Polygon.vertices) * [Index]))
                         Index += 1
                     else:
-                        for Vertex in Polygon.vertices:
-                            self.vertices.append(Vertex)
+                        for VertexIndex in Polygon.vertices:
+                            self.vertices.append(Mesh.vertices[VertexIndex])
                         self.PolygonVertexIndexes.append(
                             tuple(range(Index, Index + len(Polygon.vertices))))
                         Index += len(Polygon.vertices)            
@@ -550,6 +550,9 @@ class MeshExportObject(ExportObject):
         # Write mesh normals.
         for Index, Vertex in enumerate(MeshEnumerator.vertices):
             Normal = Vertex.normal
+            if self.Config.FlipNormals:
+                Normal = -1.0 * Vertex.normal
+            
             self.Exporter.File.Write("{:9f};{:9f};{:9f};".format(Normal[0],
                 Normal[1], Normal[2]))
             
